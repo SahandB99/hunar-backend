@@ -31,6 +31,7 @@ const artsSchema = new mongoose.Schema({
     houseNumber: Number,
   },
   contact: Map,
+  categories: [{ type: mongoose.Types.ObjectId, ref: "categories" }],
   //   birthYear: {
   //     type: Number,
   //     validate: {

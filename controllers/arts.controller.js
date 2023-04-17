@@ -7,17 +7,31 @@ export const getArts = async (req, res) => {
 
     let queryObj = JSON.parse(query);
 
-    const excludeQuery = ["sort", "limit", "page", "fields"];
+    const excludeQuery = ["sort", "limit", "page", "fields", "search"];
 
-    excludeQuery.forEach((i) => {
-      delete queryObj[i];
+    excludeQuery.forEach((key) => {
+      delete queryObj[key];
     });
+
+    if (req.query.search) {
+      queryObj.fullName = new RegExp(req.query.search, "i");
+    }
 
     const getQuery = Art.find(JSON.parse(query));
 
     if (req.query.sort) {
       getQuery.sort(req.query.sort);
     }
+
+    if (req.query.fields) {
+      getQuery.select(req.query.sort);
+    }
+
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 20;
+    const skip = limit * (page - 1);
+
+    getQuery.skip(skip).limit(limit);
 
     const arts = await getQuery;
 

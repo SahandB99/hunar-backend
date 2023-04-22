@@ -3,6 +3,8 @@ import morgan from "morgan";
 import { connectDb } from "./config/db.js";
 
 import productsRoutes from "./routes/arts.routes.js";
+import userRoutes from "./routes/users.routes.js";
+import "./strategy/auth.js";
 
 import dotenv from "dotenv";
 import { trimQueryMiddleware } from "./middlewares/trimQuery.middleware.js";
@@ -21,5 +23,6 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.use("/api/products", productsRoutes);
+app.use("/api/users", userRoutes);
 
 export default app;

@@ -22,6 +22,7 @@ const artsSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
+    enum: ["Art", "Sculptor", "Post-Impressionist", "Western-art"],
     default: "Art",
   },
   description: [String],
@@ -32,16 +33,6 @@ const artsSchema = new mongoose.Schema({
   },
   contact: Map,
   categories: [{ type: mongoose.Types.ObjectId, ref: "categories" }],
-  //   birthYear: {
-  //     type: Number,
-  //     validate: {
-  //       validator: function (v) {
-  //         const currentYear = parseInt(new Date().getFullYear().toString());
-  //         return currentYear > v;
-  //       },
-  //       message: (props) => `${props.value} is not a valid year!`,
-  //     },
-  //   },
 });
 
 const art = mongoose.model("art", artsSchema);

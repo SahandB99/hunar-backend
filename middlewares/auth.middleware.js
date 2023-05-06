@@ -1,5 +1,6 @@
 import passport from "passport";
 import UserModel from "../models/user.model.js";
+import CustomError from "../CustomError.js";
 
 export const signUpMiddleware = passport.authenticate("signup", {
   session: false,
@@ -13,11 +14,11 @@ export const checkRole = (role) => {
       const user = await UserModel.findById(req.user.sub);
 
       if (!user || user.role !== role) {
-        return res.status(401).json("not authorized");
+        throw CustomError("not authorized", 401, 4000);
       }
       next();
     } catch (error) {
-      res.status(400).json(error);
+      next(error);
     }
   };
 };

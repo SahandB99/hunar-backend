@@ -22,7 +22,7 @@ const artsSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ["Art", "Sculptor", "Post-Impressionist", "Western-art"],
+    enum: ["Art", "Sculptor", "Painting", "Western"],
     default: "Art",
   },
   description: [String],

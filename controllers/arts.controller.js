@@ -1,4 +1,7 @@
+import CustomError from "../CustomError.js";
 import Art from "../models/arts.models.js";
+import Users from "../models/user.model.js";
+import { tryCatch } from "../utils/tryCatch.js";
 
 export const getArts = async (req, res) => {
   try {
@@ -19,33 +22,52 @@ export const getArts = async (req, res) => {
 
     const getQuery = Art.find(JSON.parse(query));
 
+    const countQuery = getQuery.clone();
+    const countResults = await countQuery.count();
+
     if (req.query.sort) {
       getQuery.sort(req.query.sort);
     }
 
     if (req.query.fields) {
-      getQuery.select(req.query.sort);
+      getQuery.select(req.query.fields);
     }
 
     const page = req.query.page || 1;
-    const limit = req.query.limit || 20;
+    const limit = req.query.limit || 10;
     const skip = limit * (page - 1);
 
     getQuery.skip(skip).limit(limit);
 
     const arts = await getQuery;
 
-    res.json({ status: "success", data: arts });
+    res.json({ status: "success", results: countResults, data: arts });
   } catch (err) {
     res.status(400).json({ status: "error", data: err });
   }
 };
 
-export const addArt = async (req, res) => {
-  try {
+export const addArt = tryCatch(async (req, res) => {
+    req.body.userId = req.user.sub;
     const art = await Art.create(req.body);
+    
+    await Users.findByIdAndUpdate(req.body.userId, {
+      $set: { artId: art._id },
+    });
+    
+    res.json({ status: "success", data: art });
+});
+
+export const getArtById = async (req, res, next) => {
+  try {
+    const art = await Art.findById(req.params.id);
+
+    if (!art) {
+      throw new CustomError("Art not found", 404, 4104);
+    }
+
     res.json({ status: "success", data: art });
   } catch (err) {
-    res.status(400).json({ status: "error", data: err });
+    next(err);
   }
 };

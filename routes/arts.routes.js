@@ -1,9 +1,5 @@
 import { Router } from "express";
-import {
-  addArt,
-  getArtById,
-  getArts,
-} from "../controllers/arts.controller.js";
+import { addArt, getArtById, getArts } from "../controllers/arts.controller.js";
 import {
   resizeImage,
   resizeImages,
@@ -17,7 +13,7 @@ const router = Router();
 router.route("/").post(protect, addArt).get(getArts);
 
 router.route("/upload").post(uploadSingle, resizeImage, (req, res) => {
-  res.json({ path: `Arts/${req.file.filename}` });
+  res.json({ path: `arts/${req.file.filename}` });
 });
 
 router.route("/upload-multi").post(uploadMulti, resizeImages, (req, res) => {

@@ -5,10 +5,9 @@ import swaggerUi from "swagger-ui-express";
 import cors from "cors";
 import { connectDb } from "./config/db.js";
 
-import productsRoutes from "./routes/arts.routes.js";
+import artsRoutes from "./routes/arts.routes.js";
 import userRoutes from "./routes/users.routes.js";
 import "./strategy/auth.js";
-
 import dotenv from "dotenv";
 import { trimQueryMiddleware } from "./middlewares/trimQuery.middleware.js";
 import { checkRole, protect } from "./middlewares/auth.middleware.js";
@@ -31,7 +30,7 @@ if (process.env.NODE_ENV === "development") {
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
-app.use("/api/products", productsRoutes);
+app.use("/api/arts", artsRoutes);
 app.use("/api/users", userRoutes);
 
 app.use(errorHandler);

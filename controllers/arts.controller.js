@@ -20,7 +20,7 @@ export const getArts = async (req, res) => {
       queryObj.fullName = new RegExp(req.query.search, "i");
     }
 
-    const getQuery = Art.find(JSON.parse(query));
+    const getQuery = Art.find(queryObj);
 
     const countQuery = getQuery.clone();
     const countResults = await countQuery.count();
@@ -48,14 +48,14 @@ export const getArts = async (req, res) => {
 };
 
 export const addArt = tryCatch(async (req, res) => {
-    req.body.userId = req.user.sub;
-    const art = await Art.create(req.body);
-    
-    await Users.findByIdAndUpdate(req.body.userId, {
-      $set: { artId: art._id },
-    });
-    
-    res.json({ status: "success", data: art });
+  req.body.userId = req.user.sub;
+  const art = await Art.create(req.body);
+
+  await Users.findByIdAndUpdate(req.body.userId, {
+    $set: { artId: art._id },
+  });
+
+  res.json({ status: "success", data: art });
 });
 
 export const getArtById = async (req, res, next) => {
